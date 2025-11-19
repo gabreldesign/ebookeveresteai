@@ -1,634 +1,898 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evereste Academy</title>
-  
-  <!-- Fontes e Ícones -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- RE-ADICIONADO: Chart.js (necessário para os gráficos) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <!-- Folha de Estilo Personalizada -->
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Aplicada à Análise de Dados | Método Evereste Ágil</title>
+    
+    <!-- Fontes Futuristas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (Via CDN para estilização rápida e moderna) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js (Para os Dashboards Interativos) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuração de Estilo Personalizado (Neon/Futurista) -->
+    <style>
+        /* Variáveis de Cores Neon */
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --neon-purple: #7000ff;
+            --neon-green: #0aff00;
+            --bg-dark: #05050a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #e0e0e0;
+            font-family: 'Rajdhani', sans-serif;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.15) 0%, transparent 20%);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .brand-font {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        /* Efeito Glassmorphism */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Textos Neon */
+        .text-glow-blue {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
+            color: var(--neon-blue);
+        }
+        .text-glow-pink {
+            text-shadow: 0 0 10px rgba(188, 19, 254, 0.7), 0 0 20px rgba(188, 19, 254, 0.5);
+            color: var(--neon-pink);
+        }
+
+        /* Botões e Bordas Brilhantes */
+        .neon-border {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .neon-border:hover {
+            box-shadow: 0 0 15px var(--neon-blue), inset 0 0 5px var(--neon-blue);
+            border-color: var(--neon-blue);
+        }
+
+        /* Scrollbar Personalizada */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--neon-purple), var(--neon-blue));
+            border-radius: 5px;
+        }
+
+        /* Animações */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-anim { animation: float 4s ease-in-out infinite; }
+
+        .code-block {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #1a1a24;
+            border-left: 4px solid var(--neon-pink);
+        }
+
+        /* Nav Link Hover */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--neon-blue);
+            transition: width 0.3s;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
 </head>
-
 <body class="antialiased">
-  <!-- Container de Notificações Toast -->
-  <div id="toast-container"></div>
-  
-  <!-- Scroll Progress Bar -->
-  <div id="scroll-progress"></div>
 
-  <!-- Header -->
-  <header id="header" class="header-glass">
-    <div class="container mx-auto px-6 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="#" id="logo-link" class="cursor-pointer">
-          <img src="https://i.postimg.cc/hvvWCwnk/Prancheta-1-1.png" alt="Logo LIDS" class="h-10 w-auto" />
-        </a>
-      </div>
-      <div class="flex items-center gap-4">
-        <!-- Botão Admin visível apenas se logado como admin -->
-        <button id="adminBtnHeader" class="btn-ghost text-sm"><i class="fas fa-lock mr-2"></i>Admin</button>
-        <!-- Botão Logout visível apenas se logado como admin -->
-        <button id="logoutBtnHeader" class="btn-danger text-sm hidden"><i class="fas fa-right-from-bracket mr-2"></i>Logout</button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main View (Course List) -->
-  <div id="main-view">
-    <!-- Hero (Tema Escuro) -->
-    <section class="hero relative text-white">
-      <div class="relative z-10 container mx-auto px-6 py-24 md:py-32">
-        <div class="reveal max-w-3xl">
-          <span class="badge mb-5" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); color: white;"><i class="fa-solid fa-bolt"></i> Inscrições Abertas</span>
-          <h1 class="text-5xl md:text-7xl font-black leading-tight mb-4" style="color: white;">Evereste Academy</h1>
-          <p class="text-lg md:text-xl text-slate-200 max-w-2xl mb-8">Formações práticas e focadas em resultados para elevar a excelência do Instituto Evereste. Profissionalismo, dinamismo e tecnologia a favor do seu desenvolvimento.</p>
-          <div class="flex items-center gap-4 flex-wrap">
-            <a href="#cursos" class="btn-primary"><i class="fa-solid fa-graduation-cap mr-2"></i> Ver Cursos</a>
-          </div>
+    <!-- MENU FIXO (NAVBAR) -->
+    <nav class="fixed w-full z-50 glass-panel top-0 left-0 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <i class="fa-solid fa-mountain text-2xl text-fuchsia-500"></i>
+                    <span class="brand-font text-xl font-bold text-white tracking-wider">EVERESTE <span class="text-cyan-400">AI</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6">
+                        <a href="#capa" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium uppercase">Início</a>
+                        <a href="#fundamentos" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium uppercase">Fundamentos</a>
+                        <a href="#prompt" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium uppercase">Prompts</a>
+                        <a href="#dashboards" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium uppercase">Dashboards</a>
+                        <a href="#ferramentas" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium uppercase">Ferramentas</a>
+                        <a href="#promptoteca" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium uppercase text-fuchsia-400">Promptoteca</a>
+                    </div>
+                </div>
+                <!-- Menu Mobile Button (Simplificado) -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-gray-400 hover:text-white p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="scroll-indicator text-white text-2xl">
-        <i class="fas fa-chevron-down"></i>
-      </div>
-      <div class="particles" id="particles"></div>
-      <img src="https://i.postimg.cc/4xNpxRZJ/capabannerlids.png" alt="Banner" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none" />
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden glass-panel" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#fundamentos" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Fundamentos</a>
+                <a href="#dashboards" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Dashboards</a>
+                <a href="#promptoteca" class="text-fuchsia-400 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Promptoteca</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. CAPA -->
+    <section id="capa" class="min-h-screen flex items-center justify-center relative pt-20">
+        <!-- Elementos Decorativos de Fundo -->
+        <div class="absolute top-1/4 left-10 w-32 h-32 bg-purple-600 rounded-full filter blur-[80px] opacity-40"></div>
+        <div class="absolute bottom-1/4 right-10 w-64 h-64 bg-cyan-500 rounded-full filter blur-[100px] opacity-30"></div>
+
+        <div class="text-center z-10 px-4 max-w-5xl mx-auto">
+            <div class="inline-block border border-cyan-500/30 rounded-full px-4 py-1 mb-6 bg-cyan-900/20 backdrop-blur-sm">
+                <span class="text-cyan-400 font-bold tracking-widest text-sm uppercase"><i class="fa-solid fa-bolt mr-2"></i>Edição 2025</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-8xl font-black mb-4 leading-tight">
+                IA APLICADA À <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-fuchsia-500 filter drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]">ANÁLISE DE DADOS</span>
+            </h1>
+            
+            <h2 class="text-2xl md:text-4xl text-gray-300 font-light mb-8 tracking-[0.2em] uppercase">
+                Método Evereste Ágil
+            </h2>
+            
+            <div class="flex flex-col items-center gap-2 mb-12">
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-fuchsia-500 to-transparent"></div>
+                <p class="text-gray-400 text-lg font-medium">Por Marllon Gabrel Ribeiro da Costa</p>
+                <span class="text-sm text-gray-500 border border-gray-700 px-2 py-1 rounded">Técnico em TI & Especialista em Dados</span>
+            </div>
+
+            <a href="#fundamentos" class="inline-flex items-center px-8 py-4 border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-black transition-all duration-300 rounded font-bold text-lg neon-border group">
+                INICIAR LEITURA
+                <i class="fa-solid fa-arrow-down ml-3 group-hover:animate-bounce"></i>
+            </a>
+        </div>
+        
+        <!-- Grid decorativo -->
+        <div class="absolute bottom-0 w-full h-24 bg-gradient-to-t from-[var(--bg-dark)] to-transparent"></div>
     </section>
 
-    <!-- Cursos Disponíveis -->
-    <section id="cursos" class="section-light container mx-auto px-6 py-20 md:py-28 relative">
-      <div class="blur-blob" style="background: var(--brand-blue); top: -200px; right: -200px;"></div>
-      <div class="blur-blob" style="background: var(--brand-orange); bottom: -200px; left: -200px;"></div>
-      
-      <!-- Cursos com Vagas Abertas -->
-      <div class="reveal text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-black mb-4" style="color: var(--text);">Cursos Disponíveis</h2>
-        <p class="text-lg" style="color: var(--text-muted);">Inscrições abertas para as próximas turmas</p>
-      </div>
-      <div id="courses-list-open" class="grid md:grid-cols-2 gap-8 mb-20">
-        <!-- Cards de cursos com status 'aberto' -->
-        <p class="text-center md:col-span-2 text-gray-500">A carregar cursos...</p>
-      </div>
+    <!-- 3. FUNDAMENTOS DA IA -->
+    <section id="fundamentos" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="mb-16">
+                <h2 class="text-4xl font-bold text-white mb-2 border-l-4 border-fuchsia-500 pl-4">FUNDAMENTOS DA IA</h2>
+                <p class="text-gray-400 text-xl mt-2">A evolução do analista moderno.</p>
+            </div>
 
-      <!-- Cursos Futuros -->
-      <div class="reveal">
-        <h3 class="text-3xl font-bold mb-8 text-center" style="color: var(--text);">Em Breve</h3>
-        <div id="courses-list-soon" class="flex flex-wrap gap-6 justify-center">
-          <!-- Cards de cursos com status 'em_breve' -->
-           <p class="text-center w-full text-gray-500">A carregar futuros cursos...</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+                <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition duration-500">
+                        <i class="fa-solid fa-microchip text-9xl text-cyan-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-cyan-400 mb-4">Evolução 2022 &rarr; 2025</h3>
+                    <p class="text-gray-300 leading-relaxed mb-4">
+                        Antes, a análise de dados exigia anos de estudo em Python ou R. Em 2025, a IA atua como um acelerador.
+                        O foco mudou de <strong class="text-white">"escrever código"</strong> para <strong class="text-fuchsia-400">"fazer as perguntas certas"</strong> e arquitetar soluções.
+                    </p>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-3"></i> Democratização do código</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-3"></i> Velocidade na geração de insights</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-3"></i> Dashboards criados em minutos, não semanas</li>
+                    </ul>
+                </div>
+
+                <!-- O Trio Fundamental -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-white text-center mb-6">O Trio Fundamental (Stack Evereste)</h3>
+                    
+                    <div class="flex items-center gap-4 glass-panel p-4 rounded-xl border-l-4 border-orange-500 hover:translate-x-2 transition cursor-default">
+                        <div class="bg-orange-500/20 p-3 rounded-lg"><i class="fa-brands fa-html5 text-3xl text-orange-500"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">1. HTML (Estrutura)</h4>
+                            <p class="text-sm text-gray-400">O esqueleto do seu relatório. É onde tudo "mora".</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 glass-panel p-4 rounded-xl border-l-4 border-pink-500 hover:translate-x-2 transition cursor-default">
+                        <div class="bg-pink-500/20 p-3 rounded-lg"><i class="fa-solid fa-chart-pie text-3xl text-pink-500"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">2. Chart.js (Visualização)</h4>
+                            <p class="text-sm text-gray-400">A biblioteca poderosa e gratuita para gráficos interativos.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 glass-panel p-4 rounded-xl border-l-4 border-cyan-500 hover:translate-x-2 transition cursor-default">
+                        <div class="bg-cyan-500/20 p-3 rounded-lg"><i class="fa-solid fa-robot text-3xl text-cyan-500"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">3. Prompt (O Comando)</h4>
+                            <p class="text-sm text-gray-400">A linguagem natural que conecta você ao código.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- Sobre -->
-    <section id="sobre" class="section-alt container mx-auto px-6 py-20 md:py-28">
-      <div class="grid md:grid-cols-2 gap-12 items-center">
-        <div class="reveal">
-          <h2 class="text-4xl md:text-5xl font-black mb-6" style="color: var(--text);">Excelência e Profissionalismo</h2>
-          <p class="text-lg mb-6" style="color: var(--text-muted);">O Programa Evereste Academy é uma iniciativa do Instituto Evereste que oferece experiências imersivas, conteúdos aplicados e uma abordagem voltada à prática. Unimos design moderno, tecnologia e didática para acelerar o desenvolvimento.</p>
-          <ul class="space-y-4">
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1" style="color: var(--brand-teal);"></i><span style="color: var(--text);">Instrutores com experiência prática</span></li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1" style="color: var(--brand-teal);"></i><span style="color: var(--text);">Conteúdo atualizado e relevante</span></li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1" style="color: var(--brand-teal);"></i><span style="color: var(--text);">Foco em resultados e aplicabilidade</span></li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1" style="color: var(--brand-teal);"></i><span style="color: var(--text);">Aprendizagem validada com check-in</span></li>
-          </ul>
+    <!-- 4. ENGENHARIA DE PROMPT -->
+    <section id="prompt" class="py-24 bg-black/30 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-white mb-12 text-center">ENGENHARIA DE PROMPT <span class="text-fuchsia-500">AVANÇADA</span></h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- A Fórmula -->
+                <div class="glass-panel p-8 rounded-2xl">
+                    <h3 class="text-xl font-bold text-cyan-400 mb-6 uppercase tracking-wider"><i class="fa-solid fa-flask mr-2"></i>A Fórmula do Prompt Perfeito</h3>
+                    
+                    <div class="space-y-4 relative">
+                        <!-- Linha conectora -->
+                        <div class="absolute left-6 top-4 bottom-4 w-0.5 bg-gradient-to-b from-cyan-500 to-fuchsia-500"></div>
+
+                        <div class="ml-12 relative">
+                            <div class="absolute -left-[33px] top-1 w-6 h-6 rounded-full bg-cyan-500 border-4 border-gray-900 z-10"></div>
+                            <h4 class="text-white font-bold">1. Persona (Quem?)</h4>
+                            <p class="text-gray-400 text-sm">"Aja como um Cientista de Dados Sênior..."</p>
+                        </div>
+
+                        <div class="ml-12 relative">
+                            <div class="absolute -left-[33px] top-1 w-6 h-6 rounded-full bg-blue-500 border-4 border-gray-900 z-10"></div>
+                            <h4 class="text-white font-bold">2. Tarefa (O quê?)</h4>
+                            <p class="text-gray-400 text-sm">"Crie um dashboard HTML com Chart.js..."</p>
+                        </div>
+
+                        <div class="ml-12 relative">
+                            <div class="absolute -left-[33px] top-1 w-6 h-6 rounded-full bg-purple-500 border-4 border-gray-900 z-10"></div>
+                            <h4 class="text-white font-bold">3. Dados (Contexto)</h4>
+                            <p class="text-gray-400 text-sm">"Utilize os seguintes dados de vendas em CSV..."</p>
+                        </div>
+
+                        <div class="ml-12 relative">
+                            <div class="absolute -left-[33px] top-1 w-6 h-6 rounded-full bg-fuchsia-500 border-4 border-gray-900 z-10"></div>
+                            <h4 class="text-white font-bold">4. Estilo (Como?)</h4>
+                            <p class="text-gray-400 text-sm">"Use cores neon, fundo escuro e layout responsivo."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemplo Prático -->
+                <div>
+                    <div class="bg-gray-900 rounded-t-xl p-4 flex items-center gap-2 border-b border-gray-700">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span class="text-xs text-gray-400 ml-2">prompt_editor.txt</span>
+                    </div>
+                    <div class="code-block p-6 rounded-b-xl text-sm text-gray-300 overflow-x-auto">
+                        <span class="text-purple-400">Aja como</span> um especialista em Business Intelligence.<br><br>
+                        <span class="text-blue-400">Sua tarefa é</span> criar um código único em HTML contendo Chart.js para visualizar as vendas trimestrais.<br><br>
+                        <span class="text-green-400">[DADOS]</span><br>
+                        Jan: 1200, Fev: 1900, Mar: 3000<br><br>
+                        <span class="text-pink-400">[ESTILO]</span><br>
+                        Use fundo preto (#111), linhas do gráfico em ciano neon e fontes modernas sem serifa. Não use arquivos CSS externos.
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="reveal">
-          <div class="card-3d p-8">
-            <img src="https://i.postimg.cc/0NBrsPL3/treinamento-notion-01.jpg" alt="Equipa em treinamento" class="w-full h-auto rounded-lg" />
-            <p class="mt-6 text-center font-medium" style="color: var(--text-muted);">Uma iniciativa do Instituto Evereste para formações transformadoras.</p>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="border-t" style="border-color: var(--border); background: var(--surface);">
-      <div class="container mx-auto px-6 py-12">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div class="text-center md:text-left">
-            <p class="text-sm" style="color: var(--text-muted);">© 2025 Evereste Academy. Todos os direitos reservados.</p>
-            <a href="#" id="privacy-policy-link" class="text-sm text-blue-600 hover:underline">Política de Privacidade</a>
-          </div>
-          <div class="flex items-center gap-4">
-            <button id="adminBtnFooter" class="btn-ghost text-sm"><i class="fas fa-lock mr-2"></i>Acesso Admin</button>
-            <button id="logoutBtnFooter" class="btn-danger text-sm hidden"><i class="fas fa-right-from-bracket mr-2"></i>Logout</button>
-            <img src="https://i.postimg.cc/SKQh2j5n/logo-evereste-2025-horizontal-2.png" alt="Instituto Evereste" class="h-8 w-auto" />
-          </div>
+    <!-- 5. PUBLICAÇÃO (GITHUB PAGES) -->
+    <section id="github" class="py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                <i class="fa-brands fa-github text-4xl mr-4"></i> PUBLICAÇÃO COM GITHUB PAGES
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                <!-- Step 1 -->
+                <div class="glass-panel p-6 rounded-xl hover:border-cyan-500 transition">
+                    <div class="text-4xl font-black text-gray-700 mb-4">01</div>
+                    <h4 class="text-cyan-400 font-bold mb-2">Crie o Repositório</h4>
+                    <p class="text-xs text-gray-400">No GitHub, clique em "New Repository". Dê um nome público.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="glass-panel p-6 rounded-xl hover:border-cyan-500 transition">
+                    <div class="text-4xl font-black text-gray-700 mb-4">02</div>
+                    <h4 class="text-cyan-400 font-bold mb-2">Upload do Arquivo</h4>
+                    <p class="text-xs text-gray-400">Clique em "Add file" > "Upload files". Arraste seu HTML e nomeie como <code class="bg-gray-800 px-1 text-white">index.html</code>.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="glass-panel p-6 rounded-xl hover:border-cyan-500 transition">
+                    <div class="text-4xl font-black text-gray-700 mb-4">03</div>
+                    <h4 class="text-cyan-400 font-bold mb-2">Ative o Pages</h4>
+                    <p class="text-xs text-gray-400">Vá em "Settings" > aba "Pages". Em "Branch", selecione "main" e salve.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="glass-panel p-6 rounded-xl hover:border-cyan-500 transition">
+                    <div class="text-4xl font-black text-gray-700 mb-4">04</div>
+                    <h4 class="text-cyan-400 font-bold mb-2">Compartilhe</h4>
+                    <p class="text-xs text-gray-400">Aguarde 1 min. O GitHub gerará um link (ex: user.github.io/repo) para você enviar aos diretores.</p>
+                </div>
+            </div>
         </div>
-      </div>
+    </section>
+
+    <!-- 6. DASHBOARDS INTERATIVOS (O CORE) -->
+    <section id="dashboards" class="py-24 bg-gradient-to-b from-[#0a0a12] to-[#11111a]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <span class="text-cyan-500 font-bold tracking-widest text-sm">EXEMPLO PRÁTICO</span>
+                    <h2 class="text-4xl font-bold text-white mt-2">DASHBOARD DE VENDAS 2025</h2>
+                </div>
+                <div class="mt-4 md:mt-0 flex gap-2">
+                    <button onclick="updateChart('all')" class="px-4 py-2 bg-gray-800 hover:bg-cyan-600 text-white rounded text-sm transition">Todos</button>
+                    <button onclick="updateChart('tech')" class="px-4 py-2 bg-gray-800 hover:bg-fuchsia-600 text-white rounded text-sm transition">Tech</button>
+                    <button onclick="updateChart('services')" class="px-4 py-2 bg-gray-800 hover:bg-purple-600 text-white rounded text-sm transition">Serviços</button>
+                </div>
+            </div>
+
+            <!-- Container do Dashboard -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- KPI 1 -->
+                <div class="glass-panel p-6 rounded-xl border-t-4 border-cyan-400">
+                    <p class="text-gray-400 text-sm uppercase">Faturamento Total</p>
+                    <h3 class="text-3xl font-bold text-white mt-1">R$ 1.2M</h3>
+                    <p class="text-green-400 text-xs mt-2"><i class="fa-solid fa-arrow-up"></i> +12% vs mês anterior</p>
+                </div>
+                <!-- KPI 2 -->
+                <div class="glass-panel p-6 rounded-xl border-t-4 border-fuchsia-400">
+                    <p class="text-gray-400 text-sm uppercase">Novos Clientes</p>
+                    <h3 class="text-3xl font-bold text-white mt-1">843</h3>
+                    <p class="text-green-400 text-xs mt-2"><i class="fa-solid fa-arrow-up"></i> +5% meta batida</p>
+                </div>
+                <!-- KPI 3 -->
+                <div class="glass-panel p-6 rounded-xl border-t-4 border-purple-400">
+                    <p class="text-gray-400 text-sm uppercase">NPS Global</p>
+                    <h3 class="text-3xl font-bold text-white mt-1">78</h3>
+                    <p class="text-yellow-400 text-xs mt-2"><i class="fa-solid fa-minus"></i> Estável</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Gráfico Principal -->
+                <div class="lg:col-span-2 glass-panel p-6 rounded-xl">
+                    <h4 class="text-white font-bold mb-4">Evolução Mensal</h4>
+                    <div class="relative h-72 w-full">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+                <!-- Gráfico Secundário -->
+                <div class="glass-panel p-6 rounded-xl">
+                    <h4 class="text-white font-bold mb-4">Distribuição por Canal</h4>
+                    <div class="relative h-64 w-full flex justify-center">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="mt-6 text-center text-gray-500 text-sm italic">
+                * Este dashboard foi gerado com código HTML + JS puro, renderizado em tempo real no seu navegador.
+            </p>
+        </div>
+    </section>
+
+    <!-- 7. ESTRATÉGIA & ESTUDOS DE CASO -->
+    <section id="estudos" class="py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-white mb-12">ESTUDOS DE CASO & ESTRATÉGIA</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Estratégia Piloto -->
+                <div class="glass-panel p-8 rounded-2xl border border-gray-700">
+                    <h3 class="text-2xl font-bold text-fuchsia-400 mb-4"><i class="fa-solid fa-plane-up mr-2"></i>Conceito Piloto e Co-Piloto</h3>
+                    <p class="text-gray-300 mb-4">
+                        Na metodologia Evereste, você é o <strong>Piloto</strong> (toma decisões, conhece o negócio, define o destino). A IA é seu <strong>Co-Piloto</strong> (executa os comandos, verifica os instrumentos, escreve o código).
+                    </p>
+                    <div class="bg-black/50 p-4 rounded-lg border border-gray-700">
+                        <p class="text-sm text-gray-400">❌ Erro comum: Pedir para a IA "analisar tudo" sem contexto.</p>
+                        <p class="text-sm text-cyan-400 mt-2">✅ Acerto: "Como Piloto, analisei que as vendas caíram. Co-piloto, gere um gráfico focando na queda de Março."</p>
+                    </div>
+                </div>
+
+                <!-- Cenário Real -->
+                <div class="glass-panel p-8 rounded-2xl border border-gray-700">
+                    <h3 class="text-2xl font-bold text-cyan-400 mb-4"><i class="fa-solid fa-briefcase mr-2"></i>Cenário: Reunião de Diretoria</h3>
+                    <p class="text-gray-300 mb-4">
+                        <strong>Desafio:</strong> O Excel travou 10 min antes da reunião.<br>
+                        <strong>Solução Ágil:</strong>
+                    </p>
+                    <ol class="list-decimal ml-5 text-gray-400 space-y-2">
+                        <li>Exportar CSV dos dados brutos.</li>
+                        <li>Colar no ChatGPT com o prompt da <a href="#prompt" class="text-fuchsia-400 underline">Promptoteca</a>.</li>
+                        <li>Copiar o código HTML gerado.</li>
+                        <li>Abrir no navegador.</li>
+                        <li>Apresentar um dashboard interativo e leve em tela cheia (F11).</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FERRAMENTAS POR ÁREA (ATUALIZADO) -->
+    <section id="ferramentas" class="py-24 bg-black/50 relative overflow-hidden">
+        <!-- Background Glow Decorativo -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <h2 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-fuchsia-500 mb-16 text-center tracking-widest filter drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]">
+                🚀 TOP IA’s 2025
+            </h2>
+            
+            <!-- 1. Assistentes Gerais -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold text-cyan-400 mb-8 flex items-center border-b border-gray-800 pb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
+                    <i class="fa-solid fa-brain mr-3"></i> 1. Assistentes Gerais (IA Multimodal)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- ChatGPT -->
+                    <div class="glass-panel p-6 rounded-xl hover:border-cyan-400 transition duration-300 group hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-xl font-bold text-white group-hover:text-cyan-300 transition">ChatGPT</h4>
+                            <i class="fa-solid fa-fire text-orange-500 animate-pulse drop-shadow-[0_0_5px_rgba(249,115,22,0.8)]"></i>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Mais usada no mundo. Melhor custo-benefício para código e dados.</p>
+                        <a href="https://chatgpt.com" target="_blank" class="text-cyan-400 text-sm font-bold hover:text-white transition-colors flex items-center">ACESSAR <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                    </div>
+                    <!-- Gemini -->
+                    <div class="glass-panel p-6 rounded-xl hover:border-blue-500 transition duration-300 group hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-xl font-bold text-white group-hover:text-blue-300 transition">Gemini</h4>
+                            <i class="fa-brands fa-google text-blue-500 drop-shadow-[0_0_5px_rgba(59,130,246,0.8)]"></i>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Conecta com Gmail, Drive e Docs. Ótima para produtividade Google.</p>
+                        <a href="https://gemini.google.com" target="_blank" class="text-blue-400 text-sm font-bold hover:text-white transition-colors flex items-center">ACESSAR <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                    </div>
+                    <!-- Claude -->
+                    <div class="glass-panel p-6 rounded-xl hover:border-orange-500 transition duration-300 group hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-xl font-bold text-white group-hover:text-orange-300 transition">Claude</h4>
+                            <i class="fa-solid fa-robot text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.8)]"></i>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">O melhor para textos longos, complexos e documentos técnicos.</p>
+                        <a href="https://claude.ai" target="_blank" class="text-orange-400 text-sm font-bold hover:text-white transition-colors flex items-center">ACESSAR <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                    </div>
+                    <!-- Perplexity -->
+                    <div class="glass-panel p-6 rounded-xl hover:border-teal-400 transition duration-300 group hover:shadow-[0_0_20px_rgba(45,212,191,0.4)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-xl font-bold text-white group-hover:text-teal-300 transition">Perplexity AI</h4>
+                            <i class="fa-solid fa-magnifying-glass text-teal-400 drop-shadow-[0_0_5px_rgba(45,212,191,0.8)]"></i>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Melhor IA para PESQUISA e fontes reais. Rápida e confiável.</p>
+                        <a href="https://www.perplexity.ai" target="_blank" class="text-teal-400 text-sm font-bold hover:text-white transition-colors flex items-center">ACESSAR <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                    </div>
+                    <!-- Copilot MS -->
+                    <div class="glass-panel p-6 rounded-xl hover:border-blue-600 transition duration-300 group hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-xl font-bold text-white group-hover:text-blue-400 transition">MS Copilot</h4>
+                            <i class="fa-brands fa-windows text-blue-600 drop-shadow-[0_0_5px_rgba(37,99,235,0.8)]"></i>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Integrada ao Windows e Office. Excelente para Excel e PPT.</p>
+                        <a href="https://copilot.microsoft.com" target="_blank" class="text-blue-500 text-sm font-bold hover:text-white transition-colors flex items-center">ACESSAR <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Design & Arte -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold text-fuchsia-400 mb-8 flex items-center border-b border-gray-800 pb-4 drop-shadow-[0_0_8px_rgba(232,121,249,0.8)]">
+                    <i class="fa-solid fa-palette mr-3"></i> 2. Design, Arte e Imagem
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-fuchsia-500 hover:shadow-[0_0_15px_rgba(217,70,239,0.3)] transition">
+                        <h4 class="font-bold text-white mb-1">Midjourney</h4>
+                        <p class="text-xs text-gray-400 mb-2">Qualidade artística absurda.</p>
+                        <a href="https://www.midjourney.com" target="_blank" class="text-fuchsia-400 text-xs font-bold hover:text-white transition">VISITAR &nearr;</a>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-green-500 hover:shadow-[0_0_15px_rgba(74,222,128,0.3)] transition">
+                        <h4 class="font-bold text-white mb-1">DALL·E 3</h4>
+                        <p class="text-xs text-gray-400 mb-2">Segue instruções precisas.</p>
+                        <a href="https://labs.openai.com" target="_blank" class="text-green-400 text-xs font-bold hover:text-white transition">VISITAR &nearr;</a>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-red-500 hover:shadow-[0_0_15px_rgba(248,113,113,0.3)] transition">
+                        <h4 class="font-bold text-white mb-1">Adobe Firefly</h4>
+                        <p class="text-xs text-gray-400 mb-2">Integrado ao Photoshop.</p>
+                        <a href="https://firefly.adobe.com" target="_blank" class="text-red-400 text-xs font-bold hover:text-white transition">VISITAR &nearr;</a>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-blue-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.3)] transition">
+                        <h4 class="font-bold text-white mb-1">Canva AI</h4>
+                        <p class="text-xs text-gray-400 mb-2">Design rápido e fácil.</p>
+                        <a href="https://canva.com" target="_blank" class="text-blue-400 text-xs font-bold hover:text-white transition">VISITAR &nearr;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Vídeo & Animação -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold text-purple-400 mb-8 flex items-center border-b border-gray-800 pb-4 drop-shadow-[0_0_8px_rgba(192,132,252,0.8)]">
+                    <i class="fa-solid fa-video mr-3"></i> 3. Vídeo e Animação
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-5 rounded-xl hover:border-purple-500 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition">
+                        <h4 class="font-bold text-white">Runway ML</h4>
+                        <p class="text-xs text-gray-400 mt-2">A melhor para vídeos realistas.</p>
+                        <a href="https://runwayml.com" target="_blank" class="block mt-3 text-purple-400 text-sm font-bold hover:text-white transition">ACESSAR &nearr;</a>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl hover:border-purple-500 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition">
+                        <h4 class="font-bold text-white">Pika Labs</h4>
+                        <p class="text-xs text-gray-400 mt-2">Animações e curtas com prompts.</p>
+                        <a href="https://pika.art" target="_blank" class="block mt-3 text-purple-400 text-sm font-bold hover:text-white transition">ACESSAR &nearr;</a>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl hover:border-purple-500 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition">
+                        <h4 class="font-bold text-white">Synthesia</h4>
+                        <p class="text-xs text-gray-400 mt-2">Avatares humanos falantes.</p>
+                        <a href="https://synthesia.io" target="_blank" class="block mt-3 text-purple-400 text-sm font-bold hover:text-white transition">ACESSAR &nearr;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Marketing & Conteúdo -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold text-yellow-400 mb-8 flex items-center border-b border-gray-800 pb-4 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]">
+                    <i class="fa-solid fa-pen-nib mr-3"></i> 4. Marketing e Conteúdo
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <a href="https://jasper.ai" target="_blank" class="glass-panel p-4 rounded-lg flex items-center gap-4 hover:bg-white/5 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition">
+                        <div class="w-10 h-10 rounded bg-yellow-500/20 flex items-center justify-center text-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.3)]"><i class="fa-solid fa-bullhorn"></i></div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Jasper AI</h4>
+                            <p class="text-xs text-gray-400">Textos persuasivos.</p>
+                        </div>
+                    </a>
+                    <a href="https://copy.ai" target="_blank" class="glass-panel p-4 rounded-lg flex items-center gap-4 hover:bg-white/5 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition">
+                        <div class="w-10 h-10 rounded bg-yellow-500/20 flex items-center justify-center text-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.3)]"><i class="fa-solid fa-align-left"></i></div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Copy.ai</h4>
+                            <p class="text-xs text-gray-400">Social media e ads.</p>
+                        </div>
+                    </a>
+                    <a href="https://notion.so" target="_blank" class="glass-panel p-4 rounded-lg flex items-center gap-4 hover:bg-white/5 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition">
+                        <div class="w-10 h-10 rounded bg-yellow-500/20 flex items-center justify-center text-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.3)]"><i class="fa-solid fa-book-open"></i></div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Notion AI</h4>
+                            <p class="text-xs text-gray-400">Produtividade.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 5. Negócios & Dados (Grid Compacto) -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold text-emerald-400 mb-8 flex items-center border-b border-gray-800 pb-4 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]">
+                    <i class="fa-solid fa-briefcase mr-3"></i> 5. Negócios, Dados e Automação
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="glass-panel p-4 rounded-xl text-center hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition">
+                        <i class="fa-solid fa-robot text-2xl text-emerald-500 mb-2 drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]"></i>
+                        <h4 class="text-white font-bold text-sm">GPTs</h4>
+                        <p class="text-[10px] text-gray-400">Automação</p>
+                    </div>
+                    <a href="https://elevenlabs.io" target="_blank" class="glass-panel p-4 rounded-xl text-center hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition">
+                        <i class="fa-solid fa-microphone-lines text-2xl text-emerald-500 mb-2 drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]"></i>
+                        <h4 class="text-white font-bold text-sm">ElevenLabs</h4>
+                        <p class="text-[10px] text-gray-400">Voz Artificial</p>
+                    </a>
+                    <a href="https://powerbi.microsoft.com" target="_blank" class="glass-panel p-4 rounded-xl text-center hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition">
+                        <i class="fa-solid fa-chart-simple text-2xl text-emerald-500 mb-2 drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]"></i>
+                        <h4 class="text-white font-bold text-sm">Power BI</h4>
+                        <p class="text-[10px] text-gray-400">Dashboards</p>
+                    </a>
+                    <a href="https://tableau.com" target="_blank" class="glass-panel p-4 rounded-xl text-center hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition">
+                        <i class="fa-solid fa-table text-2xl text-emerald-500 mb-2 drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]"></i>
+                        <h4 class="text-white font-bold text-sm">Tableau</h4>
+                        <p class="text-[10px] text-gray-400">Analytics</p>
+                    </a>
+                    <a href="https://zapier.com" target="_blank" class="glass-panel p-4 rounded-xl text-center hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition">
+                        <i class="fa-solid fa-bolt text-2xl text-emerald-500 mb-2 drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]"></i>
+                        <h4 class="text-white font-bold text-sm">Zapier</h4>
+                        <p class="text-[10px] text-gray-400">Integração</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 6. TI & Programação e 7. Pesquisa (Lado a Lado) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                <div>
+                    <h3 class="text-2xl font-bold text-white mb-6 border-l-4 border-cyan-500 pl-4 text-glow-blue">6. TI & Programação</h3>
+                    <ul class="space-y-4">
+                        <li class="glass-panel p-3 rounded flex items-center justify-between hover:border-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.3)] transition">
+                            <span class="text-gray-300"><i class="fa-brands fa-github mr-2 text-cyan-500"></i> GitHub Copilot</span>
+                            <a href="https://github.com/features/copilot" target="_blank" class="text-xs text-cyan-400 border border-cyan-500/30 px-2 py-1 rounded hover:bg-cyan-500 hover:text-black transition">Visitar</a>
+                        </li>
+                        <li class="glass-panel p-3 rounded flex items-center justify-between hover:border-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.3)] transition">
+                            <span class="text-gray-300"><i class="fa-solid fa-terminal mr-2 text-cyan-500"></i> Cursor IDE</span>
+                            <a href="https://cursor.so" target="_blank" class="text-xs text-cyan-400 border border-cyan-500/30 px-2 py-1 rounded hover:bg-cyan-500 hover:text-black transition">Visitar</a>
+                        </li>
+                        <li class="glass-panel p-3 rounded flex items-center justify-between hover:border-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.3)] transition">
+                            <span class="text-gray-300"><i class="fa-solid fa-code mr-2 text-cyan-500"></i> Replit AI</span>
+                            <a href="https://replit.com" target="_blank" class="text-xs text-cyan-400 border border-cyan-500/30 px-2 py-1 rounded hover:bg-cyan-500 hover:text-black transition">Visitar</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-white mb-6 border-l-4 border-teal-500 pl-4 drop-shadow-[0_0_8px_rgba(20,184,166,0.8)]">7. Pesquisa & Ciência</h3>
+                    <ul class="space-y-4">
+                        <li class="glass-panel p-3 rounded flex items-center justify-between hover:border-teal-500 hover:shadow-[0_0_10px_rgba(20,184,166,0.3)] transition">
+                            <span class="text-gray-300"><i class="fa-solid fa-globe mr-2 text-teal-500"></i> You.com AI</span>
+                            <a href="https://you.com" target="_blank" class="text-xs text-teal-400 border border-teal-500/30 px-2 py-1 rounded hover:bg-teal-500 hover:text-black transition">Visitar</a>
+                        </li>
+                        <li class="glass-panel p-3 rounded flex items-center justify-between hover:border-teal-500 hover:shadow-[0_0_10px_rgba(20,184,166,0.3)] transition">
+                            <span class="text-gray-300"><i class="fa-solid fa-microscope mr-2 text-teal-500"></i> SciSpace AI</span>
+                            <a href="https://scispace.com" target="_blank" class="text-xs text-teal-400 border border-teal-500/30 px-2 py-1 rounded hover:bg-teal-500 hover:text-black transition">Visitar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TOP 10 RESUMO -->
+            <div class="glass-panel p-8 rounded-2xl border border-white/20 text-center shadow-[0_0_30px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(188,19,254,0.2)] transition duration-500">
+                <h3 class="text-xl font-bold text-white mb-6 uppercase tracking-widest text-glow-pink">⭐ Top 10 Absolutas (Resumo)</h3>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <span class="bg-gray-800 hover:bg-cyan-900 border border-gray-700 hover:border-cyan-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">ChatGPT</span>
+                    <span class="bg-gray-800 hover:bg-blue-900 border border-gray-700 hover:border-blue-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">Gemini</span>
+                    <span class="bg-gray-800 hover:bg-orange-900 border border-gray-700 hover:border-orange-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">Claude</span>
+                    <span class="bg-gray-800 hover:bg-teal-900 border border-gray-700 hover:border-teal-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">Perplexity</span>
+                    <span class="bg-gray-800 hover:bg-blue-800 border border-gray-700 hover:border-blue-400 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">MS Copilot</span>
+                    <span class="bg-gray-800 hover:bg-fuchsia-900 border border-gray-700 hover:border-fuchsia-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">Midjourney</span>
+                    <span class="bg-gray-800 hover:bg-green-900 border border-gray-700 hover:border-green-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">DALL·E</span>
+                    <span class="bg-gray-800 hover:bg-purple-900 border border-gray-700 hover:border-purple-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">Runway</span>
+                    <span class="bg-gray-800 hover:bg-cyan-900 border border-gray-700 hover:border-cyan-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">GitHub Copilot</span>
+                    <span class="bg-gray-800 hover:bg-emerald-900 border border-gray-700 hover:border-emerald-500 text-white px-4 py-2 rounded-full text-sm transition cursor-default shadow-[0_0_5px_rgba(0,0,0,0.5)]">ElevenLabs</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 10. PROMPTOTECA -->
+    <section id="promptoteca" class="py-24 relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-blue-900/20 pointer-events-none"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-white mb-4 text-glow-blue">PROMPTOTECA</h2>
+                <p class="text-gray-400">Copie, Cole e Adapte. Sua caixa de ferramentas executiva.</p>
+            </div>
+
+            <!-- Card Prompt 1 -->
+            <div class="mb-8 glass-panel p-6 rounded-xl border border-white/10">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-fuchsia-400">🚀 Gerador de Dashboard HTML (O Clássico)</h3>
+                    <button onclick="copyToClipboard('p1')" class="text-xs bg-gray-700 hover:bg-cyan-600 text-white px-3 py-1 rounded transition">Copiar</button>
+                </div>
+                <div class="bg-black/60 p-4 rounded-lg overflow-x-auto">
+                    <pre id="p1" class="text-sm text-gray-300 font-mono whitespace-pre-wrap">
+Atue como um Desenvolvedor Front-End Sênior e Especialista em Dados.
+Quero criar um Dashboard Interativo em um ÚNICO arquivo HTML.
+
+REQUISITOS:
+1. Use Bootstrap ou Tailwind via CDN para o layout.
+2. Use Chart.js via CDN para os gráficos.
+3. Tema: Dark Mode (Fundo escuro, textos claros).
+4. Estrutura: Header com logo fictício, 3 Cards de KPIs no topo, e abaixo 2 gráficos (1 Barra, 1 Linha).
+
+DADOS PARA OS GRÁFICOS:
+- Gráfico 1 (Vendas por Mês): Jan(10), Fev(20), Mar(15), Abr(30).
+- Gráfico 2 (Categorias): A(40%), B(25%), C(35%).
+
+Gere o código completo, pronto para salvar e abrir no navegador.
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Card Prompt 2 -->
+            <div class="mb-8 glass-panel p-6 rounded-xl border border-white/10">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-cyan-400">📊 Análise de Dados (Insights Rápidos)</h3>
+                    <button onclick="copyToClipboard('p2')" class="text-xs bg-gray-700 hover:bg-cyan-600 text-white px-3 py-1 rounded transition">Copiar</button>
+                </div>
+                <div class="bg-black/60 p-4 rounded-lg overflow-x-auto">
+                    <pre id="p2" class="text-sm text-gray-300 font-mono whitespace-pre-wrap">
+Atue como um Consultor de Negócios.
+Abaixo estão os dados de vendas CSV da minha empresa.
+[COLAR DADOS AQUI]
+
+Por favor:
+1. Identifique o padrão de sazonalidade.
+2. Aponte 3 anomalias ou outliers.
+3. Sugira uma estratégia de ação baseada nos números.
+Seja conciso e direto, formato bullet points executivos.
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Card Prompt 3 -->
+            <div class="mb-8 glass-panel p-6 rounded-xl border border-white/10">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-green-400">📝 Reescrita Corporativa (E-mail/Relatório)</h3>
+                    <button onclick="copyToClipboard('p3')" class="text-xs bg-gray-700 hover:bg-cyan-600 text-white px-3 py-1 rounded transition">Copiar</button>
+                </div>
+                <div class="bg-black/60 p-4 rounded-lg overflow-x-auto">
+                    <pre id="p3" class="text-sm text-gray-300 font-mono whitespace-pre-wrap">
+Melhore o texto abaixo para torná-lo mais profissional, persuasivo e executivo. Remova gírias, corrija a gramática e use um tom de liderança confiante.
+Texto Original: "[COLAR SEU TEXTO RASCUNHO AQUI]"
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. INSTRUÇÕES FINAIS -->
+    <section id="instrucoes" class="py-20 bg-gray-900">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <i class="fa-solid fa-circle-info text-5xl text-cyan-500 mb-6"></i>
+            <h2 class="text-3xl font-bold text-white mb-6">COMO USAR ESSE CONHECIMENTO?</h2>
+            <p class="text-gray-400 mb-8 leading-relaxed">
+                Este e-book não é apenas para leitura. É uma ferramenta.
+                Mantenha a aba aberta enquanto trabalha. Copie os prompts, teste os gráficos e publique seus resultados.
+                O futuro pertence a quem traduz dados em decisões rápidas.
+            </p>
+            <a href="#" class="text-fuchsia-400 hover:text-white transition font-bold">Voltar ao Topo &uarr;</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-800 py-12 text-center bg-black">
+        <p class="text-gray-500 text-sm">
+            &copy; 2025 Marllon Gabrel Ribeiro da Costa.<br>
+            Desenvolvido com Inteligência Artificial. Método Evereste Ágil.
+        </p>
     </footer>
-  </div>
 
-  <!-- Course Detail View -->
-  <div id="course-detail-view" class="hidden">
-    <!-- O conteúdo dinâmico será injetado aqui pela função renderCourseDetail() -->
-    <p class="text-center p-20">A carregar detalhes do curso...</p>
-  </div>
-  
-  <!-- Admin Panel View -->
-  <div id="admin-panel-view" class="hidden">
-    <div id="admin-panel">
-      <!-- Navegação Lateral do Admin -->
-      <nav id="admin-nav" class="flex flex-col flex-shrink-0 p-6">
-        <div class="mb-10 px-4 pt-3">
-          <h2 class="text-2xl font-bold text-slate-800">Painel Admin</h2>
-        </div>
-        
-        <!-- RE-ADICIONADO: Link do Dashboard -->
-        <a href="#dashboard" class="admin-nav-link active" data-target="admin-dashboard">
-          <i class="fa-solid fa-chart-line"></i> Dashboard
-        </a>
-        
-        <a href="#cursos" class="admin-nav-link" data-target="admin-cursos"> <!-- 'active' removido daqui -->
-          <i class="fa-solid fa-graduation-cap"></i> Cursos
-        </a>
-        <a href="#matriculas" class="admin-nav-link" data-target="admin-matriculas">
-          <i class="fa-solid fa-users"></i> Matrículas
-        </a>
-        <a href="#instrutores" class="admin-nav-link" data-target="admin-instrutores">
-          <i class="fa-solid fa-chalkboard-user"></i> Instrutores
-        </a>
-        
-        <div class="mt-auto">
-          <a href="#" id="admin-logout-nav" class="admin-nav-link !border-transparent hover:!bg-red-100 hover:!text-red-700">
-            <i class="fa-solid fa-right-from-bracket"></i> Sair
-          </a>
-          <p id="admin-user-email" class="text-xs text-center text-slate-500 mt-4 break-all"></p>
-        </div>
-      </nav>
-      
-      <!-- Conteúdo Principal do Admin -->
-      <main id="admin-content" class="p-10 overflow-y-auto">
-        
-        <!-- RE-ADICIONADO: Seção Dashboard -->
-        <section id="admin-dashboard" class="admin-section">
-          <h1 class="text-3xl font-bold mb-8">Dashboard</h1>
-        
-          <!-- Cards de Estatísticas -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="card-3d !p-6">
-              <h3 class="text-sm font-semibold text-gray-500 uppercase">Total Matrículas</h3>
-              <p id="stats-total-enrollments" class="text-3xl font-bold text-blue-600">0</p>
-            </div>
-            <div class="card-3d !p-6">
-              <h3 class="text-sm font-semibold text-gray-500 uppercase">Total Check-ins</h3>
-              <p id="stats-total-checkins" class="text-3xl font-bold text-teal-600">0</p>
-            </div>
-          </div>
-        
-          <!-- Gráficos -->
-          <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <div class="card-3d !p-6">
-              <h3 class="text-lg font-bold mb-4">Matrículas ao Longo do Tempo</h3>
-              <canvas id="enrollmentsChart" height="150"></canvas>
-            </div>
-            <div class="card-3d !p-6">
-              <h3 class="text-lg font-bold mb-4">Média de Avaliação (Instrutores)</h3>
-              <canvas id="ratingsChart" height="150"></canvas>
-            </div>
-          </div>
-        </section>
-        
-        <!-- Seção Cursos -->
-        <section id="admin-cursos" class="admin-section hidden"> <!-- 'hidden' adicionado aqui -->
-          <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold">Gestão de Cursos</h1>
-            <button id="admin-add-course-btn" class="btn-primary"><i class="fas fa-plus mr-2"></i>Adicionar Novo Curso</button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Status</th>
-                  <th>Data</th>
-                  <th>Avaliação</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="admin-courses-table-body">
-                <!-- Linhas de cursos -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-        
-        <!-- Seção Matrículas -->
-        <section id="admin-matriculas" class="admin-section hidden">
-          <h1 class="text-3xl font-bold mb-8">Gestão de Matrículas</h1>
-          <div class="overflow-x-auto">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Protocolo</th>
-                  <th>Aluno</th>
-                  <th>E-mail</th>
-                  <th>Curso</th>
-                  <th>Data</th>
-                  <th>Setor</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="admin-enrollments-table-body">
-                <!-- Linhas de matrículas -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-        
-        <!-- Seção Instrutores -->
-        <section id="admin-instrutores" class="admin-section hidden">
-          <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold">Gestão de Instrutores</h1>
-            <button id="admin-add-instructor-btn" class="btn-primary"><i class="fas fa-plus mr-2"></i>Adicionar Instrutor</button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Foto</th>
-                  <th>Nome</th>
-                  <th>Título</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="admin-instructors-table-body">
-                <!-- Linhas de instrutores -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-        
-        <!-- Seção Configurações (Simplificada) -->
-        <section id="admin-config" class="admin-section hidden">
-          <h1 class="text-3xl font-bold mb-8">Configurações</h1>
+    <!-- Scripts de Lógica do Dashboard e Interatividade -->
+    <script>
+        // --- LÓGICA DE COPIAR PROMPTS ---
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Prompt copiado para a área de transferência!");
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+            });
+        }
 
-          <div class="card-3d !p-6 max-w-2xl mt-8">
-            <h3 class="text-lg font-bold mb-4">Popular Banco de Dados</h3>
-            <p class="text-sm text-gray-500 mb-6">Se o seu banco de dados estiver vazio, clique aqui para adicionar os dados iniciais dos cursos (Fotografia, IA) e dos instrutores. <strong class="text-red-600">Atenção:</strong> Isso pode sobrescrever dados existentes se os IDs forem iguais.</p>
-            <button id="populate-db-btn" class="btn-primary"><i class="fas fa-database mr-2"></i>Popular Dados Iniciais</button>
-          </div>
-        </section>
-
-      </main>
-    </div>
-  </div>
-
-  <!-- MODAIS (Estrutura HTML permanece a mesma) -->
-
-  <!-- Modal Login -->
-  <div id="modalLogin" class="modal-backdrop">
-    <div class="modal-card modal-card-sm p-8">
-      <div class="flex items-start justify-between mb-6">
-        <div>
-          <h3 class="text-2xl font-bold" style="color: var(--text);">Acesso Administrativo</h3>
-          <p class="text-sm" style="color: var(--text-muted);">Área restrita para gestores</p>
-        </div>
-        <button id="closeLogin" class="btn-ghost !p-2 !text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form id="loginForm" class="space-y-4">
-        <div>
-          <label class="admin-label">E-mail</label>
-          <input id="loginEmail" type="email" class="admin-input" placeholder="admin@evereste.org" required />
-        </div>
-        <div>
-          <label class="admin-label">Senha</label>
-          <input id="loginPassword" type="password" class="admin-input" placeholder="••••••••" required />
-        </div>
-        <p id="loginError" class="text-red-600 text-sm hidden">Erro ao fazer login.</p>
-        <button type="submit" class="btn-primary w-full !py-3 !text-base"><i class="fa-solid fa-right-to-bracket mr-2"></i>Entrar</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Inscrição -->
-  <div id="modalEnroll" class="modal-backdrop">
-    <div class="modal-card modal-card-md p-8">
-      <div class="flex items-start justify-between mb-6">
-        <div>
-          <h3 class="text-2xl font-bold" style="color: var(--text);">Formulário de Inscrição</h3>
-          <p class="text-sm" style="color: var(--text-muted);">Inscreva-se no curso: <strong id="enrollCourseName" class="text-blue-600"></strong></p>
-        </div>
-        <button id="closeEnroll" class="btn-ghost !p-2 !text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form id="enrollForm" class="space-y-4">
-        <div>
-          <label class="admin-label">Nome Completo</label>
-          <input id="enrollName" type="text" class="admin-input" placeholder="O seu nome" required />
-        </div>
-        <div>
-          <label class="admin-label">E-mail</label>
-          <input id="enrollEmail" type="email" class="admin-input" placeholder="voce@email.com" required />
-        </div>
-        <div>
-          <label class="admin-label">Telefone</label>
-          <input id="enrollPhone" type="tel" class="admin-input" placeholder="(00) 00000-0000" required />
-        </div>
-        <div>
-          <label class="admin-label">Setor</label>
-          <input id="enrollSector" type="text" class="admin-input" placeholder="Ex: Comunicação, Pedagógico..." required />
-        </div>
-
-        <!-- Termos e LGPD -->
-        <div class="space-y-3 pt-2">
-          <label class="flex items-start gap-3 cursor-pointer text-sm">
-            <input type="checkbox" id="enrollTermImage" class="mt-1 h-5 w-5 accent-blue-600" required />
-            <span class="text-gray-700">Eu concordo com o <a href="#" target="_blank" class="text-blue-600 underline">Termo de Uso de Imagem</a>.</span>
-          </label>
-          <label class="flex items-start gap-3 cursor-pointer text-sm">
-            <input type="checkbox" id="enrollTermPrivacy" class="mt-1 h-5 w-5 accent-blue-600" required />
-            <span class="text-gray-700">Eu li e concordo com a <a href="#" target="_blank" class="text-blue-600 underline">Política de Privacidade (LGPD)</a>.</span>
-          </label>
-        </div>
-
-        <p id="enrollError" class="text-red-600 text-sm hidden">Erro ao processar inscrição. Tente novamente.</p>
-        <button type="submit" class="btn-primary w-full !py-3 !text-base">
-          <span id="enrollSubmitBtnText"><i class="fa-solid fa-paper-plane mr-2"></i>Confirmar Inscrição</span>
-          <span id="enrollSpinner" class="hidden"><i class="fas fa-spinner animate-spin mr-2"></i>A processar...</span>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Sucesso Inscrição (Protocolo) -->
-  <div id="modalEnrollSuccess" class="modal-backdrop">
-    <div class="modal-card modal-card-sm p-8 text-center">
-      <div class="text-center">
-        <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
-        <h3 class="text-2xl font-bold" style="color: var(--text);">Inscrição Confirmada!</h3>
-        <p class="text-base mt-2" style="color: var(--text-muted);">Guarde o seu número de protocolo:</p>
-        <p id="enrollProtocol" class="text-3xl font-bold text-blue-600 bg-blue-50 border-2 border-blue-200 rounded-lg py-4 my-4"></p>
-        <p class="text-sm" style="color: var(--text-muted);">Você receberá os detalhes da inscrição no seu e-mail.</p>
-      </div>
-      <button id="closeEnrollSuccess" class="btn-primary w-full mt-6">Fechar</button>
-    </div>
-  </div>
-
-  <!-- Modal Check-in (SENHA FIXA) -->
-  <div id="modalCheckin" class="modal-backdrop">
-    <div class="modal-card modal-card-sm p-8">
-      <div class="flex items-start justify-between mb-6">
-        <div>
-          <h3 class="text-2xl font-bold" style="color: var(--text);">Check-in do Curso</h3>
-          <p class="text-sm" style="color: var(--text-muted);">Insira a senha fornecida pelo instrutor.</p>
-        </div>
-        <button id="closeCheckin" class="btn-ghost !p-2 !text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form id="checkinForm" class="space-y-4">
-        <div>
-          <label class="admin-label">Senha de Acesso</label>
-          <input id="checkinPassword" type="password" class="admin-input" placeholder="••••••••" required />
-        </div>
-        <p id="checkinError" class="text-red-600 text-sm hidden">Senha incorreta. Tente novamente.</p>
-        <button type="submit" class="btn-primary w-full !py-3 !text-base">
-          <span id="checkinSubmitBtnText">Validar Check-in</span>
-          <span id="checkinSpinner" class="hidden"><i class="fas fa-spinner animate-spin mr-2"></i>A validar...</span>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Avaliar Instrutor -->
-  <div id="modalRating" class="modal-backdrop">
-    <div class="modal-card modal-card-sm p-8">
-      <div class="flex items-start justify-between mb-6">
-        <div>
-          <h3 class="text-2xl font-bold" style="color: var(--text);">Avaliar Instrutor</h3>
-          <p class="text-sm" style="color: var(--text-muted);">O seu feedback é importante para nós.</p>
-        </div>
-        <button id="closeRating" class="btn-ghost !p-2 !text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form id="ratingForm" class="space-y-4">
-        <div>
-          <label class="admin-label">Selecione o Instrutor</label>
-          <select id="ratingInstructorSelect" class="admin-select" required>
-            <!-- Opções de instrutores -->
-          </select>
-        </div>
-        <div>
-          <label class="admin-label">A sua avaliação (1 a 5 estrelas)</label>
-          <div id="ratingStars" class="flex text-3xl text-gray-300 cursor-pointer">
-            <i class="fa-solid fa-star" data-value="1"></i>
-            <i class="fa-solid fa-star" data-value="2"></i>
-            <i class="fa-solid fa-star" data-value="3"></i>
-            <i class="fa-solid fa-star" data-value="4"></i>
-            <i class="fa-solid fa-star" data-value="5"></i>
-          </div>
-          <input type="hidden" id="ratingValue" value="0" required>
-        </div>
-         <div>
-          <label class="admin-label">Comentário (Opcional)</label>
-          <textarea id="ratingComment" class="admin-textarea" rows="3" placeholder="O que achou da didática?"></textarea>
-        </div>
-        <p id="ratingError" class="text-red-600 text-sm hidden">Erro ao enviar. Tente novamente.</p>
-        <button type="submit" class="btn-primary w-full !py-3 !text-base">
-          <span id="ratingSubmitBtnText">Enviar Avaliação</span>
-          <span id="ratingSpinner" class="hidden"><i class="fas fa-spinner animate-spin mr-2"></i>A enviar...</span>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Admin: Editar Curso -->
-  <div id="modalEditCourse" class="modal-backdrop">
-    <div class="modal-card modal-card-xl p-8">
-      <div class="flex items-start justify-between mb-6">
-        <h3 id="modalCourseTitle" class="text-2xl font-bold" style="color: var(--text);"></h3>
-        <button id="closeEditCourse" class="btn-ghost !p-2 !text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      
-      <form id="courseForm" class="space-y-6">
-        <input type="hidden" id="courseId">
+        // --- CONFIGURAÇÃO DO CHART.JS (DASHBOARD) ---
         
-        <!-- Seção 1: Informações Básicas -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2">Informações Básicas</h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="admin-label" for="courseTitle">Título</label>
-            <input class="admin-input" type="text" id="courseTitle" required>
-          </div>
-          <div>
-            <label class="admin-label" for="courseSubtitle">Subtítulo</label>
-            <input class="admin-input" type="text" id="courseSubtitle" required>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label class="admin-label" for="courseThemeColor">Cor (Hex)</label>
-            <input class="admin-input" type="text" id="courseThemeColor" placeholder="#FFC107" required>
-          </div>
-          <div>
-            <label class="admin-label" for="courseIcon">Ícone (FontAwesome)</label>
-            <input class="admin-input" type="text" id="courseIcon" placeholder="fa-camera-retro" required>
-          </div>
-          <div>
-            <label class="admin-label" for="courseStatus">Status</label>
-            <select id="courseStatus" class="admin-select" required>
-              <option value="aberto">Vagas Abertas</option>
-              <option value="em_breve">Em Breve</option>
-              <option value="fechado">Fechado (Oculto)</option>
-            </select>
-          </div>
-        </div>
-         <div>
-            <label class="admin-label" for="courseHeaderImage">URL Imagem Capa</label>
-            <input class="admin-input" type="text" id="courseHeaderImage" placeholder="https://url-da-imagem.com/capa.jpg" required>
-          </div>
+        // Configurações Globais para estilo Dark/Neon
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = '#374151';
         
-        <!-- Seção 2: Descrições -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2 mt-4">Descrições</h4>
-        <div>
-          <label class="admin-label" for="courseSummary">Resumo (Card)</label>
-          <textarea class="admin-textarea" id="courseSummary" rows="2" required></textarea>
-        </div>
-        <div>
-          <label class="admin-label" for="courseFullDescription">Descrição Completa</label>
-          <textarea class="admin-textarea" id="courseFullDescription" rows="3" required></textarea>
-        </div>
-        <div>
-          <label class="admin-label" for="courseTargetAudience">Público-alvo</label>
-          <textarea class="admin-textarea" id="courseTargetAudience" rows="2" required></textarea>
-        </div>
-        
-        <!-- Seção 3: Construtores Dinâmicos (Substituindo JSON) -->
-        
-        <!-- Detalhes (Key-Value) -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2 mt-4">Detalhes (Data, Carga, etc.)</h4>
-        <div id="courseDetails-builder" class="space-y-3">
-          <!-- Campos de Detalhes (Key-Value) serão injetados aqui -->
-        </div>
-        <button type="button" id="addDetail-btn" class="btn-add-item"><i class="fas fa-plus mr-2"></i>Adicionar Detalhe</button>
+        let mainChartInstance = null;
+        let doughnutChartInstance = null;
 
-        <!-- Objetivos (List) -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2 mt-4">Objetivos de Aprendizagem</h4>
-        <div id="courseObjectives-builder" class="space-y-3">
-          <!-- Campos de Objetivos (Lista) serão injetados aqui -->
-        </div>
-        <button type="button" id="addObjective-btn" class="btn-add-item"><i class="fas fa-plus mr-2"></i>Adicionar Objetivo</button>
+        // Dados Simulados
+        const dataSets = {
+            all: [1200, 1900, 3000, 5000, 2000, 3000],
+            tech: [800, 1200, 2500, 4000, 1500, 2000],
+            services: [400, 700, 500, 1000, 500, 1000]
+        };
 
-        <!-- Requisitos (List) -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2 mt-4">Requisitos</h4>
-        <div id="courseRequirements-builder" class="space-y-3">
-          <!-- Campos de Requisitos (Lista) serão injetados aqui -->
-        </div>
-        <button type="button" id="addRequirement-btn" class="btn-add-item"><i class="fas fa-plus mr-2"></i>Adicionar Requisito</button>
+        // Inicialização dos Gráficos
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctxMain = document.getElementById('mainChart').getContext('2d');
+            const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
 
-        <!-- Atividades Práticas (Title-Description) -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2 mt-4">Atividades Práticas</h4>
-        <div id="courseActivities-builder" class="space-y-3">
-          <!-- Campos de Atividades (Title-Desc) serão injetados aqui -->
-        </div>
-        <button type="button" id="addActivity-btn" class="btn-add-item"><i class="fas fa-plus mr-2"></i>Adicionar Atividade</button>
-        
-        <!-- Módulos (Title-Topics List) -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2 mt-4">Módulos do Curso</h4>
-        <div id="courseModules-builder" class="space-y-3">
-          <!-- Campos de Módulos (Title-Topics) serão injetados aqui -->
-        </div>
-        <button type="button" id="addModule-btn" class="btn-add-item"><i class="fas fa-plus mr-2"></i>Adicionar Módulo</button>
+            // Gradiente para o gráfico de linha
+            let gradient = ctxMain.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(0, 243, 255, 0.5)');   
+            gradient.addColorStop(1, 'rgba(0, 243, 255, 0)');
 
-        
-        <!-- Seção 4: Configurações -->
-        <h4 class="text-lg font-bold text-gray-700 border-b pb-2 mt-4">Configurações</h4>
-        <!-- Instructors Selection -->
-        <div>
-          <label class="admin-label">Instrutores</label>
-          <div id="courseInstructorsList" class="checkbox-list">
-            <!-- Checkboxes de instrutores -->
-          </div>
-        </div>
-        
-        <!-- Liberação de Avaliação -->
-        <div>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" id="courseIsRatingEnabled" class="h-5 w-5 accent-blue-600" />
-            <span class="admin-label !mb-0">Liberar Avaliação do Curso?</span>
-          </label>
-          <p class="text-sm text-gray-500 mt-1">Se marcado, o botão "Avaliar Instrutor" aparecerá para alunos que fizeram check-in.</p>
-        </div>
+            // Gráfico Principal (Linha)
+            mainChartInstance = new Chart(ctxMain, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: dataSets.all,
+                        borderColor: '#00f3ff',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#00f3ff',
+                        pointRadius: 5,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { grid: { borderDash: [5, 5], color: 'rgba(255,255,255,0.1)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
 
-        <p id="courseFormError" class="text-red-600 text-sm hidden">Erro. Verifique os campos.</p>
-        
-        <div class="flex justify-end gap-4 pt-4 border-t mt-6">
-          <button type="button" id="courseFormCancel" class="btn-ghost">Cancelar</button>
-          <button type="submit" class="btn-primary">
-            <span id="courseSubmitBtnText">Salvar Curso</span>
-            <span id="courseFormSpinner" class="hidden"><i class="fas fa-spinner animate-spin mr-2"></i>A salvar...</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+            // Gráfico Rosca (Categorias)
+            doughnutChartInstance = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Tech', 'Serviços', 'Consultoria'],
+                    datasets: [{
+                        data: [55, 30, 15],
+                        backgroundColor: [
+                            '#00f3ff', // Cyan
+                            '#bc13fe', // Pink
+                            '#7000ff'  // Purple
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
 
-  <!-- Modal Admin: Editar Instrutor -->
-  <div id="modalEditInstructor" class="modal-backdrop">
-    <div class="modal-card modal-card-lg p-8">
-      <div class="flex items-start justify-between mb-6">
-        <h3 id="modalInstructorTitle" class="text-2xl font-bold" style="color: var(--text);"></h3>
-        <button id="closeEditInstructor" class="btn-ghost !p-2 !text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form id="instructorForm" class="space-y-6">
-        <input type="hidden" id="instructorId">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="admin-label" for="instructorName">Nome</label>
-            <input class="admin-input" type="text" id="instructorName" required>
-          </div>
-           <div>
-            <label class="admin-label" for="instructorTitle">Título</label>
-            <input class="admin-input" type="text" id="instructorTitle" placeholder="Ex: Supervisor de Marketing" required>
-          </div>
-        </div>
-        <div>
-            <label class="admin-label" for="instructorImage">URL da Foto</label>
-            <input class="admin-input" type="text" id="instructorImage" placeholder="https://url-da-foto.com/perfil.jpg" required>
-        </div>
-        <div>
-          <label class="admin-label" for="instructorBio">Biografia (Card)</label>
-          <textarea class="admin-textarea" id="instructorBio" rows="3" placeholder="Pequena descrição que aparece no card..."></textarea>
-        </div>
-        
-        <p id="instructorFormError" class="text-red-600 text-sm hidden">Erro. Verifique os campos.</p>
-        
-        <div class="flex justify-end gap-4 pt-4">
-          <button type="button" id="instructorFormCancel" class="btn-ghost">Cancelar</button>
-          <button type="submit" class="btn-primary">
-            <span id="instructorSubmitBtnText">Salvar Instrutor</span>
-            <span id="instructorFormSpinner" class="hidden"><i class="fas fa-spinner animate-spin mr-2"></i>A salvar...</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-  
-  <!-- Modal Confirmação de Exclusão -->
-  <div id="modalConfirmDelete" class="modal-backdrop">
-    <div class="modal-card modal-card-sm p-8 text-center">
-        <i class="fas fa-exclamation-triangle text-5xl text-red-500 mb-6"></i>
-        <h3 class="text-2xl font-bold" style="color: var(--text);">Tem a certeza?</h3>
-        <p class="text-base mt-2 mb-6" style="color: var(--text-muted);" id="modalConfirmMessage">Esta ação é irreversível.</p>
-        <div class="flex justify-center gap-4">
-          <button id="modalConfirmCancel" class="btn-ghost w-full">Cancelar</button>
-          <button id="modalConfirmDeleteBtn" class="btn-danger w-full">Sim, Excluir</button>
-        </div>
-    </div>
-  </div>
+        // Função para atualizar o gráfico com botões de filtro
+        function updateChart(type) {
+            if (!mainChartInstance) return;
 
-  <!-- SCRIPTS -->
-  <!-- Script da Aplicação -->
-  <script type="module" src="app.js"></script>
+            // Atualiza dados
+            mainChartInstance.data.datasets[0].data = dataSets[type];
+            
+            // Atualiza cores baseado no tipo para dar feedback visual
+            if(type === 'tech') {
+                mainChartInstance.data.datasets[0].borderColor = '#bc13fe'; // Pink
+                mainChartInstance.data.datasets[0].pointBorderColor = '#bc13fe';
+            } else if (type === 'services') {
+                mainChartInstance.data.datasets[0].borderColor = '#7000ff'; // Purple
+                mainChartInstance.data.datasets[0].pointBorderColor = '#7000ff';
+            } else {
+                mainChartInstance.data.datasets[0].borderColor = '#00f3ff'; // Cyan
+                mainChartInstance.data.datasets[0].pointBorderColor = '#00f3ff';
+            }
+
+            mainChartInstance.update();
+        }
+    </script>
 </body>
 </html>
-
